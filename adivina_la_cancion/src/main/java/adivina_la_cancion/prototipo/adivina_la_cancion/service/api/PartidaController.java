@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import adivina_la_cancion.prototipo.adivina_la_cancion.domain.Partida;
+import adivina_la_cancion.prototipo.adivina_la_cancion.dto.PartidaDTO;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.PartidaRepository;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.PlaylistRepository;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.UsuarioRepository;
@@ -41,17 +43,10 @@ public class PartidaController {
         return new ResponseEntity<List<Partida>>(partidaService.obtenerPartidas(), HttpStatus.OK);
     }
 
-    // Posiblemente, cuando pase el número de rondas, si es privada, etc. tenga que pasarlo por el cuerpo
-    @PostMapping("/{playlistID}")
+    @PostMapping()
     @Transactional
-    public ResponseEntity<Partida> crearPartida(@PathVariable Long playlistID) {
-        System.out.println("Se ejecuta esto");
-        Partida partida = partidaService.crearPartida(playlistID);
-        if (partida != null) {
-            return new ResponseEntity<>(partida, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Partida> crearPartida(@RequestBody PartidaDTO partidaDTO) {
+        return partidaService.crearPartida(partidaDTO);
     }
 
     @PutMapping("/{partidaID}/{usuarioID}/anhadirUsuario")

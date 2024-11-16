@@ -44,8 +44,10 @@ public class Partida {
     public Partida() {
     }
 
-    public Partida(List<Usuario> usuarios, List<Ronda> rondas, Playlist playlist) {
+    public Partida(int numMaxUsuarios, List<Usuario> usuarios, int numMaxRondas, List<Ronda> rondas, Playlist playlist) {
+        this.numMaxUsuarios = numMaxUsuarios;
         this.usuarios = usuarios;
+        this.numMaxRondas = numMaxRondas;
         this.rondas = rondas;
         this.playlist = playlist;
     }

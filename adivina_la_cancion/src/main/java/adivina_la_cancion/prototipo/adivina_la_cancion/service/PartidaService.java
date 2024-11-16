@@ -4,6 +4,7 @@ package adivina_la_cancion.prototipo.adivina_la_cancion.service;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import adivina_la_cancion.prototipo.adivina_la_cancion.domain.Partida;
 import adivina_la_cancion.prototipo.adivina_la_cancion.domain.Playlist;
 import adivina_la_cancion.prototipo.adivina_la_cancion.domain.Usuario;
+import adivina_la_cancion.prototipo.adivina_la_cancion.dto.PartidaDTO;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.PartidaRepository;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.PlaylistRepository;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.UsuarioRepository;
@@ -86,16 +88,24 @@ public class PartidaService {
         return partidaRepo.findAll();
     }
 
-    public Partida crearPartida(Long playlistID) {
-        Optional<Playlist> playlistOptional = playlistRepo.findById(playlistID);
+    public ResponseEntity<Partida> crearPartida(PartidaDTO partidaDTO) {
+        Optional<Playlist> playlistOptional = playlistRepo.findById(partidaDTO.getPlaylistID());
+        Optional<Usuario> usuarioOptional = ur.findById(partidaDTO.getUsuarioID());
 
-        if (playlistOptional.isPresent()) {
+        if (playlistOptional.isPresent() && usuarioOptional.isPresent()) {
             Playlist playlist = playlistOptional.get();
-            Partida partida = new Partida(new ArrayList<>(), new ArrayList<>(), playlist);
+            Usuario usuario = usuarioOptional.get();
+
+            Partida partida = new Partida(
+                partidaDTO.getNumMaxUsuarios(),
+                new ArrayList<>(Arrays.asList(usuario)),
+                partidaDTO.getNumMaxRondas(),
+                new ArrayList<>(), playlist);
+
             partidaRepo.save(partida);
-            return partida;
+            return new ResponseEntity<>(partida, HttpStatus.OK);
         } else {
-            return null;
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
