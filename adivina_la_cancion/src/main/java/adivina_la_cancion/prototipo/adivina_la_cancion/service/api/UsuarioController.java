@@ -20,10 +20,10 @@ public class UsuarioController {
     @Autowired
     protected UsuarioRepository ur;
 
-    @PostMapping("/{nombreUsuario}")
+    @PostMapping("/{usuarioNombre}")
     @Transactional
-    public ResponseEntity<Usuario> crearUsuario(@PathVariable String nombreUsuario) {
-        Usuario usuario = new Usuario(nombreUsuario);
+    public ResponseEntity<Usuario> crearUsuario(@PathVariable String usuarioNombre) {
+        Usuario usuario = new Usuario(usuarioNombre);
         System.out.println("Usuario creado");
         return ResponseEntity.ok(ur.save(usuario));
     }

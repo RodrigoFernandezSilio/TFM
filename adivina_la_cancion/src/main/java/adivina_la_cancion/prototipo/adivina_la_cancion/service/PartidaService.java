@@ -3,29 +3,34 @@ package adivina_la_cancion.prototipo.adivina_la_cancion.service;
 
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
 import adivina_la_cancion.prototipo.adivina_la_cancion.domain.Partida;
-import adivina_la_cancion.prototipo.adivina_la_cancion.domain.Ronda;
+import adivina_la_cancion.prototipo.adivina_la_cancion.domain.Playlist;
+import adivina_la_cancion.prototipo.adivina_la_cancion.domain.Usuario;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.PartidaRepository;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.PlaylistRepository;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.UsuarioRepository;
-import jakarta.transaction.Transactional;
 
 
 @Service
 public class PartidaService {
 
     @Autowired
-    protected PartidaRepository pr;
+    protected PartidaRepository partidaRepo;
 
     @Autowired
-    protected PlaylistRepository plr;
+    protected PlaylistRepository playlistRepo;
 
     @Autowired
     protected UsuarioRepository ur;
@@ -41,10 +46,10 @@ public class PartidaService {
 
 
 
-
+    /* No lo uso, solo sirve como ejemplo de uso de taskScheduler
     // TODO: Solo puede iniciar partida el anfitrion
     public RespuestaService<Partida> iniciarPartidaPorAnfitrion(long partidaID) {
-        Optional<Partida> partidaOptional = pr.findById(partidaID);
+        Optional<Partida> partidaOptional = partidaRepo.findById(partidaID);
 
         if (partidaOptional.isPresent()) {
             partidaActual = partidaOptional.get();
@@ -58,24 +63,12 @@ public class PartidaService {
 
     @Transactional
     private void crearRonda(int idRonda) {
-
-        // partidaActual.crearRonda();
-        // pr.save(partidaActual);
-        // if (partidaActual.getRondas().size() <= 5) {
-        //     try {
-        //         Thread.sleep(10000);
-        //     } catch (InterruptedException e) {
-        //         e.printStackTrace();
-        //     } 
-        //     crearRonda();
-        // }
-
         if (partidaActual != null) {
             if (rondasCreadas < 5) {
                 System.out.println("Ejecutando método crearRonda, ronda número " + rondasCreadas);
                 System.out.println(partidaActual.getRondas().size());
                 new Ronda();
-                pr.save(partidaActual);
+                partidaRepo.save(partidaActual);
                 rondasCreadas++;
             } else {
                 future.cancel(false);
@@ -86,5 +79,78 @@ public class PartidaService {
             System.out.println("Ejecución completada de método crearRonda " + rondasCreadas + " veces, terminando tarea.");
         }
     }
+    */
 
+    
+    public List<Partida> obtenerPartidas() {
+        return partidaRepo.findAll();
+    }
+
+    public Partida crearPartida(Long playlistID) {
+        Optional<Playlist> playlistOptional = playlistRepo.findById(playlistID);
+
+        if (playlistOptional.isPresent()) {
+            Playlist playlist = playlistOptional.get();
+            Partida partida = new Partida(new ArrayList<>(), new ArrayList<>(), playlist);
+            partidaRepo.save(partida);
+            return partida;
+        } else {
+            return null;
+        }
+    }
+
+    public ResponseEntity<Partida> anhadirUsuario(Long partidaID, Long usuarioID) {
+        Optional<Partida> partidaOptional = partidaRepo.findById(partidaID);
+        Optional<Usuario> usuarioOptional = ur.findById(usuarioID);
+
+        if (partidaOptional.isPresent() && usuarioOptional.isPresent()) {
+            Partida partida = partidaOptional.get();
+            Usuario usuario = usuarioOptional.get();
+
+            if (partida.anhadirUsuario(usuario)) {
+                // Tras añadir al usuario, comprobar si la partida se ha llenado
+                if (partida.getUsuarios().size() == partida.getNumMaxUsuarios()) {
+                    // Si la partida se ha llenado, se inicia
+                    iniciarPartidaAsync(partida);
+                }
+                return new ResponseEntity<>(partida, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    protected void iniciarPartida(Partida partida) {
+        partida.iniciarPartida();
+    }
+
+
+    @Async
+    protected void iniciarPartidaAsync(Partida partida) {
+        iniciarPartida(partida);
+    }
+
+
+    public ResponseEntity<Partida> iniciarPartidaPorAnfitrion(Long partidaID, Long usuarioID) {
+        Optional<Partida> partidaOptional = partidaRepo.findById(partidaID);
+        Optional<Usuario> usuarioOptional = ur.findById(usuarioID);
+
+        if (partidaOptional.isPresent() && usuarioOptional.isPresent()) {
+            Partida partida = partidaOptional.get();
+            Usuario usuario = usuarioOptional.get();
+
+            // Comprobar que el usuario que inicia la partida es el anfitrion
+            if (partida.getUsuarios().get(0) == usuario) {
+                // Si es el anfitrion se inicia la partida
+                iniciarPartida(partida);
+                return new ResponseEntity<>(partida, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

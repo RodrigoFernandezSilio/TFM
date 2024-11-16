@@ -1,27 +1,23 @@
 package adivina_la_cancion.prototipo.adivina_la_cancion.service.api;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import adivina_la_cancion.prototipo.adivina_la_cancion.domain.Partida;
-import adivina_la_cancion.prototipo.adivina_la_cancion.domain.Playlist;
-import adivina_la_cancion.prototipo.adivina_la_cancion.domain.Usuario;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.PartidaRepository;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.PlaylistRepository;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.UsuarioRepository;
 import adivina_la_cancion.prototipo.adivina_la_cancion.service.PartidaService;
-import adivina_la_cancion.prototipo.adivina_la_cancion.service.RespuestaService;
 
 
 @RestController
@@ -29,7 +25,7 @@ import adivina_la_cancion.prototipo.adivina_la_cancion.service.RespuestaService;
 public class PartidaController {
 
     @Autowired
-    protected PartidaService ps;
+    protected PartidaService partidaService;
 
     @Autowired
     protected PartidaRepository pr;
@@ -42,51 +38,31 @@ public class PartidaController {
 
     @GetMapping
     public ResponseEntity<List<Partida>> obtenerPartidas() {
-        return ResponseEntity.ok(pr.findAll());
+        return new ResponseEntity<List<Partida>>(partidaService.obtenerPartidas(), HttpStatus.OK);
     }
 
     // Posiblemente, cuando pase el número de rondas, si es privada, etc. tenga que pasarlo por el cuerpo
     @PostMapping("/{playlistID}")
     @Transactional
-    public ResponseEntity<Partida> crearPartida(Long playlistID) {
-        Optional<Playlist> playlistOptional = plr.findById(playlistID);
-
-        if (playlistOptional.isPresent()) {
-            Playlist playlist = playlistOptional.get();
-            Partida partida = new Partida(new HashSet<>(), new ArrayList<>(), playlist);
-            return ResponseEntity.ok(pr.save(partida));
+    public ResponseEntity<Partida> crearPartida(@PathVariable Long playlistID) {
+        System.out.println("Se ejecuta esto");
+        Partida partida = partidaService.crearPartida(playlistID);
+        if (partida != null) {
+            return new ResponseEntity<>(partida, HttpStatus.OK);
         } else {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/{partidaID}/{usuarioID}/anhadirUsuario")
     @Transactional
-    public ResponseEntity<String> anhadirUsuario(Long partidaID, Long usuarioID) {
-        Optional<Partida> partidaOptional = pr.findById(partidaID);
-        Optional<Usuario> usuarioOptional = ur.findById(usuarioID);
-
-        if (partidaOptional.isPresent() && usuarioOptional.isPresent()) {
-            Partida partida = partidaOptional.get();
-            Usuario usuario = usuarioOptional.get();
-
-            partida.anhadirUsuario(usuario);
-
-            return ResponseEntity.ok("Usuario añadido a la partida");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Partida> anhadirUsuario(@PathVariable Long partidaID, @PathVariable Long usuarioID) {
+        return partidaService.anhadirUsuario(partidaID, usuarioID);
     }
 
-    @PutMapping("/{partidaID}/iniciarPartida")
+    @PutMapping("/{partidaID}/{usuarioID}/iniciarPartida")
     @Transactional
-    public ResponseEntity<String> iniciarPartida(Long partidaID) {
-        RespuestaService<Partida> respuestaService = ps.iniciarPartidaPorAnfitrion(partidaID);
-
-        if (respuestaService.getExito() == true) {
-            return ResponseEntity.ok(respuestaService.getMensaje());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Partida> iniciarPartida(@PathVariable Long partidaID, @PathVariable Long usuarioID) {
+        return partidaService.iniciarPartidaPorAnfitrion(partidaID, usuarioID);
     }
 }

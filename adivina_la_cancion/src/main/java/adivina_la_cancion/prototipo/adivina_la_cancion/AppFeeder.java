@@ -1,4 +1,4 @@
-package adivina_la_cancion.prototipo.adivina_la_cancion.service;
+package adivina_la_cancion.prototipo.adivina_la_cancion;
 
 import java.util.Arrays;
 import java.util.HashSet;
