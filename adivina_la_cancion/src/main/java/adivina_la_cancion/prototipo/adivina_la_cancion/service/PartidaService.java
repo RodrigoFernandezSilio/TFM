@@ -97,7 +97,7 @@ public class PartidaService {
             Usuario usuario = usuarioOptional.get();
 
             Partida partida = new Partida(partidaDTO.getNumMaxUsuarios(), new ArrayList<>(Arrays.asList(usuario)),
-                    partidaDTO.getNumMaxRondas(), new ArrayList<>(), playlist, partidaDTO.getPrivada(),
+                    partidaDTO.getNumMaxRondas(), new ArrayList<>(), playlist, partidaDTO.isPrivada(),
                     partidaDTO.getContrasenha());
 
             partidaRepo.save(partida);
