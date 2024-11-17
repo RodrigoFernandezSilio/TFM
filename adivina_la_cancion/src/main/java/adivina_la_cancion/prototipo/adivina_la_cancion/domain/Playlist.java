@@ -8,7 +8,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 public class Playlist {
 
@@ -16,37 +23,10 @@ public class Playlist {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @NonNull
     private String nombre;
 
+    @NonNull
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Cancion> canciones;
-
-    public Playlist() {
-
-    }
-
-    public Playlist(String nombre, Set<Cancion> canciones) {
-        this.nombre = nombre;
-        this.canciones = canciones;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public Set<Cancion> getCanciones() {
-        return canciones;
-    }
-
-    public void setCanciones(Set<Cancion> canciones) {
-        this.canciones = canciones;
-    }
 }

@@ -7,7 +7,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 public class Respuesta {
 
@@ -15,49 +22,14 @@ public class Respuesta {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @NonNull
     @ManyToOne
     private Usuario usuario;
 
+    @NonNull
     @ManyToOne
     private Cancion cancionSeleccionada;
 
+    @NonNull
     private Instant instanteRespuesta;
-
-    public Respuesta(Usuario usuario, Cancion cancionSeleccionada, Instant instanteRespuesta) {
-        this.usuario = usuario;
-        this.cancionSeleccionada = cancionSeleccionada;
-        this.instanteRespuesta = instanteRespuesta;
-    }
-
-    public Respuesta() {
-
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Cancion getCancionSeleccionada() {
-        return cancionSeleccionada;
-    }
-
-    public void setCancionSeleccionada(Cancion cancionSeleccionada) {
-        this.cancionSeleccionada = cancionSeleccionada;
-    }
-
-    public Instant getInstanteRespuesta() {
-        return instanteRespuesta;
-    }
-
-    public void setInstanteRespuesta(Instant instanteRespuesta) {
-        this.instanteRespuesta = instanteRespuesta;
-    }
 }

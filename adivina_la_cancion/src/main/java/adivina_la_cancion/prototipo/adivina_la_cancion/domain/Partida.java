@@ -16,7 +16,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 public class Partida {
 
@@ -24,85 +31,27 @@ public class Partida {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    // https://www.baeldung.com/jpa-persisting-enums-in-jpa#string
-    @Enumerated(EnumType.STRING)
+    @NonNull
+    @Enumerated(EnumType.STRING) // https://www.baeldung.com/jpa-persisting-enums-in-jpa#string
     private EstadoPartida estado;
 
-    private int numMaxUsuarios;
+    @NonNull
+    private Integer numMaxUsuarios;
 
+    @NonNull
     @ManyToMany
     private List<Usuario> usuarios;
 
-    private int numMaxRondas;
+    @NonNull
+    private Integer numMaxRondas;
 
+    @NonNull
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Ronda> rondas;
 
+    @NonNull
     @ManyToOne
     private Playlist playlist;
-
-    public Partida() {
-    }
-
-    public Partida(int numMaxUsuarios, List<Usuario> usuarios, int numMaxRondas, List<Ronda> rondas, Playlist playlist) {
-        this.numMaxUsuarios = numMaxUsuarios;
-        this.usuarios = usuarios;
-        this.numMaxRondas = numMaxRondas;
-        this.rondas = rondas;
-        this.playlist = playlist;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public EstadoPartida getEstado() {
-        return estado;
-    }
-
-    public void setEstado(EstadoPartida estado) {
-        this.estado = estado;
-    }
-
-    public int getNumMaxUsuarios() {
-        return numMaxUsuarios;
-    }
-
-    public void setNumMaxUsuarios(int numMaxUsuarios) {
-        this.numMaxUsuarios = numMaxUsuarios;
-    }
-
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
-
-    public int getNumMaxRondas() {
-        return numMaxRondas;
-    }
-
-    public void setNumMaxRondas(int numMaxRondas) {
-        this.numMaxRondas = numMaxRondas;
-    }
-
-    public List<Ronda> getRondas() {
-        return rondas;
-    }
-
-    public void setRondas(List<Ronda> rondas) {
-        this.rondas = rondas;
-    }
-
-    public Playlist getPlaylist() {
-        return playlist;
-    }
-
-    public void setPlaylist(Playlist playlist) {
-        this.playlist = playlist;
-    }
 
     public Ronda crearRonda() {
         if (rondas.size() < 5) {
