@@ -53,6 +53,12 @@ public class Partida {
     @ManyToOne
     private Playlist playlist;
 
+    @NonNull
+    private Boolean privada;
+
+    @NonNull
+    private Integer contrasenha;
+
 
     /**
      * Añade un usuario a la partida.

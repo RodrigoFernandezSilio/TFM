@@ -1,7 +1,6 @@
 
 package adivina_la_cancion.prototipo.adivina_la_cancion.service;
 
-
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +23,6 @@ import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.PartidaRepos
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.PlaylistRepository;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.UsuarioRepository;
 
-
 @Service
 public class PartidaService {
 
@@ -46,44 +44,46 @@ public class PartidaService {
     private ScheduledFuture<?> future;
     private Duration INTERVALO = Duration.ofSeconds(5);
 
+    /*
+     * No lo uso, solo sirve como ejemplo de uso de taskScheduler
+     * // TODO: Solo puede iniciar partida el anfitrion
+     * public RespuestaService<Partida> iniciarPartidaPorAnfitrion(long partidaID) {
+     * Optional<Partida> partidaOptional = partidaRepo.findById(partidaID);
+     * 
+     * if (partidaOptional.isPresent()) {
+     * partidaActual = partidaOptional.get();
+     * future = taskScheduler.scheduleAtFixedRate(() -> crearRonda(1234),
+     * INTERVALO);
+     * 
+     * return new RespuestaService<>(true, "Partida iniciada", partidaActual);
+     * } else {
+     * return new RespuestaService<>(false, "Partida no encontrada", null);
+     * }
+     * }
+     * 
+     * @Transactional
+     * private void crearRonda(int idRonda) {
+     * if (partidaActual != null) {
+     * if (rondasCreadas < 5) {
+     * System.out.println("Ejecutando método crearRonda, ronda número " +
+     * rondasCreadas);
+     * System.out.println(partidaActual.getRondas().size());
+     * new Ronda();
+     * partidaRepo.save(partidaActual);
+     * rondasCreadas++;
+     * } else {
+     * future.cancel(false);
+     * System.out.println("Ejecución completada de método crearRonda " +
+     * rondasCreadas + " veces, terminando tarea.");
+     * }
+     * } else {
+     * future.cancel(false);
+     * System.out.println("Ejecución completada de método crearRonda " +
+     * rondasCreadas + " veces, terminando tarea.");
+     * }
+     * }
+     */
 
-
-    /* No lo uso, solo sirve como ejemplo de uso de taskScheduler
-    // TODO: Solo puede iniciar partida el anfitrion
-    public RespuestaService<Partida> iniciarPartidaPorAnfitrion(long partidaID) {
-        Optional<Partida> partidaOptional = partidaRepo.findById(partidaID);
-
-        if (partidaOptional.isPresent()) {
-            partidaActual = partidaOptional.get();
-            future = taskScheduler.scheduleAtFixedRate(() -> crearRonda(1234), INTERVALO);
-
-            return new RespuestaService<>(true, "Partida iniciada", partidaActual);
-        } else {
-            return new RespuestaService<>(false, "Partida no encontrada", null);
-        }
-    }
-
-    @Transactional
-    private void crearRonda(int idRonda) {
-        if (partidaActual != null) {
-            if (rondasCreadas < 5) {
-                System.out.println("Ejecutando método crearRonda, ronda número " + rondasCreadas);
-                System.out.println(partidaActual.getRondas().size());
-                new Ronda();
-                partidaRepo.save(partidaActual);
-                rondasCreadas++;
-            } else {
-                future.cancel(false);
-                System.out.println("Ejecución completada de método crearRonda " + rondasCreadas + " veces, terminando tarea.");
-            }
-        } else {
-            future.cancel(false);
-            System.out.println("Ejecución completada de método crearRonda " + rondasCreadas + " veces, terminando tarea.");
-        }
-    }
-    */
-
-    
     public List<Partida> obtenerPartidas() {
         return partidaRepo.findAll();
     }
@@ -96,11 +96,9 @@ public class PartidaService {
             Playlist playlist = playlistOptional.get();
             Usuario usuario = usuarioOptional.get();
 
-            Partida partida = new Partida(
-                partidaDTO.getNumMaxUsuarios(),
-                new ArrayList<>(Arrays.asList(usuario)),
-                partidaDTO.getNumMaxRondas(),
-                new ArrayList<>(), playlist);
+            Partida partida = new Partida(partidaDTO.getNumMaxUsuarios(), new ArrayList<>(Arrays.asList(usuario)),
+                    partidaDTO.getNumMaxRondas(), new ArrayList<>(), playlist, partidaDTO.getPrivada(),
+                    partidaDTO.getContrasenha());
 
             partidaRepo.save(partida);
             return new ResponseEntity<>(partida, HttpStatus.OK);
@@ -136,12 +134,10 @@ public class PartidaService {
         partida.iniciarPartida();
     }
 
-
     @Async
     protected void iniciarPartidaAsync(Partida partida) {
         iniciarPartida(partida);
     }
-
 
     public ResponseEntity<Partida> iniciarPartidaPorAnfitrion(Long partidaID, Long usuarioID) {
         Optional<Partida> partidaOptional = partidaRepo.findById(partidaID);
