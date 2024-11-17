@@ -1,5 +1,6 @@
 package adivina_la_cancion.prototipo.adivina_la_cancion.domain;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,9 +32,8 @@ public class Partida {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NonNull
     @Enumerated(EnumType.STRING) // https://www.baeldung.com/jpa-persisting-enums-in-jpa#string
-    private EstadoPartida estado;
+    private EstadoPartida estado = EstadoPartida.NO_INICIADA;
 
     @NonNull
     private Integer numMaxUsuarios;
@@ -53,32 +53,6 @@ public class Partida {
     @ManyToOne
     private Playlist playlist;
 
-    public Ronda crearRonda() {
-        if (rondas.size() < 5) {
-            // Obtener todas las canciones de la playlist
-            List<Cancion> todasLasCanciones = new ArrayList<Cancion>(playlist.getCanciones());
-
-            // Barajar las canciones para obtener 4 al azar
-            Collections.shuffle(todasLasCanciones);
-            List<Cancion> cancionesSeleccionadas = todasLasCanciones.subList(0, 4);
-
-            // Elegir una canción correcta al azar de las 4 seleccionadas
-            // TODO: Aqui mejor elegir una del 0 al 4 al azar. que no sea siempre la 0
-            Collections.shuffle(cancionesSeleccionadas);
-            Cancion cancionCorrecta = cancionesSeleccionadas.get(0);
-
-            // Crear la nueva ronda
-            Ronda ronda = new Ronda(cancionesSeleccionadas, cancionCorrecta, new ArrayList<>());
-
-            // Añadir la ronda a la lista de rondas
-            System.out.println("Clase: Partida. Se añade la ronda");
-            rondas.add(ronda);
-
-            return ronda;
-        } else {
-            return null;
-        }
-    }
 
     /**
      * Añade un usuario a la partida.
@@ -129,7 +103,7 @@ public class Partida {
             Cancion cancionCorrecta = cancionesSeleccionadas.get(indiceCancionCorrecta);
 
             // Crear la nueva ronda
-            Ronda ronda = new Ronda(cancionesSeleccionadas, cancionCorrecta, new ArrayList<>());
+            Ronda ronda = new Ronda(cancionesSeleccionadas, cancionCorrecta, new ArrayList<>(), Instant.now());
 
             // Añadir la ronda a la lista de rondas
             rondas.add(ronda);
