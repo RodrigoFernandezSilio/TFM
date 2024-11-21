@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router'; // Para routerLink
 
 @Component({
   selector: 'app-menu-principal',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './menu-principal.component.html',
   styleUrl: './menu-principal.component.css'
 })
