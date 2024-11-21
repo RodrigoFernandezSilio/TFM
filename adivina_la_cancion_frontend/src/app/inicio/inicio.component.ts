@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { UsuarioService } from '../usuario.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { UsuarioService } from '../usuario.service';
 })
 export class InicioComponent {
 
-  constructor(private usuarioService: UsuarioService) { }
+  constructor(private router : Router, private usuarioService: UsuarioService) { }
 
   crearUsuario(nombreUsuario: string) {
     console.log("Creando usuario...");
@@ -22,6 +23,8 @@ export class InicioComponent {
         console.error("Error al crear usuario:", error);
       }
     });
+
+    this.router.navigate(['/menu-principal']); // Redirige a /menu-principal
   }
   
 }
