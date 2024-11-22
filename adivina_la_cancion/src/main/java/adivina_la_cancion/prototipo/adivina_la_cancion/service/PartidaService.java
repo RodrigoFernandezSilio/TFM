@@ -88,7 +88,7 @@ public class PartidaService {
         return partidaRepo.findAll();
     }
 
-    public ResponseEntity<Partida> crearPartida(PartidaDTO partidaDTO) {
+    public ResponseEntity<Long> crearPartida(PartidaDTO partidaDTO) {
         Optional<Playlist> playlistOptional = playlistRepo.findById(partidaDTO.getPlaylistID());
         Optional<Usuario> usuarioOptional = ur.findById(partidaDTO.getUsuarioID());
 
@@ -101,7 +101,7 @@ public class PartidaService {
                     partidaDTO.getCodigoAcceso());
 
             partidaRepo.save(partida);
-            return new ResponseEntity<>(partida, HttpStatus.OK);
+            return new ResponseEntity<>(partida.getId(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

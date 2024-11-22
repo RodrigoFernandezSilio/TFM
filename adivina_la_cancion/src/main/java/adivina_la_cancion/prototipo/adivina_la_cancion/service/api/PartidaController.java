@@ -47,7 +47,7 @@ public class PartidaController {
 
     @PostMapping()
     @Transactional
-    public ResponseEntity<Partida> crearPartida(@RequestBody PartidaDTO partidaDTO) {
+    public ResponseEntity<Long> crearPartida(@RequestBody PartidaDTO partidaDTO) {
         return partidaService.crearPartida(partidaDTO);
     }
 
