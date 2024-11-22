@@ -59,7 +59,7 @@ public class PartidaController {
 
     @PutMapping("/{partidaID}/{usuarioID}/iniciarPartida")
     @Transactional
-    public ResponseEntity<Partida> iniciarPartida(@PathVariable Long partidaID, @PathVariable Long usuarioID) {
+    public ResponseEntity<String> iniciarPartida(@PathVariable Long partidaID, @PathVariable Long usuarioID) {
         return partidaService.iniciarPartidaPorAnfitrion(partidaID, usuarioID);
     }
 }

@@ -139,7 +139,7 @@ public class PartidaService {
         iniciarPartida(partida);
     }
 
-    public ResponseEntity<Partida> iniciarPartidaPorAnfitrion(Long partidaID, Long usuarioID) {
+    public ResponseEntity<String> iniciarPartidaPorAnfitrion(Long partidaID, Long usuarioID) {
         Optional<Partida> partidaOptional = partidaRepo.findById(partidaID);
         Optional<Usuario> usuarioOptional = ur.findById(usuarioID);
 
@@ -151,7 +151,7 @@ public class PartidaService {
             if (partida.getUsuarios().get(0) == usuario) {
                 // Si es el anfitrion se inicia la partida
                 iniciarPartida(partida);
-                return new ResponseEntity<>(partida, HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
