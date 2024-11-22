@@ -57,7 +57,7 @@ public class Partida {
     private Boolean privada;
 
     @NonNull
-    private Integer contrasenha;
+    private Integer codigoAcceso;
 
 
     /**

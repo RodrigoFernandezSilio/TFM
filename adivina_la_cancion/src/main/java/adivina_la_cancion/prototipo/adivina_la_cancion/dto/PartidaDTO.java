@@ -17,5 +17,5 @@ public class PartidaDTO {
 
     private boolean privada;
 
-    private int contrasenha;
+    private int codigoAcceso;
 }

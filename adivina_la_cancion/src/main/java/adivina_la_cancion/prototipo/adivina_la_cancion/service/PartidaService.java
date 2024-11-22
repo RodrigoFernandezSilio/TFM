@@ -98,7 +98,7 @@ public class PartidaService {
 
             Partida partida = new Partida(partidaDTO.getNumMaxUsuarios(), new ArrayList<>(Arrays.asList(usuario)),
                     partidaDTO.getNumMaxRondas(), new ArrayList<>(), playlist, partidaDTO.isPrivada(),
-                    partidaDTO.getContrasenha());
+                    partidaDTO.getCodigoAcceso());
 
             partidaRepo.save(partida);
             return new ResponseEntity<>(partida, HttpStatus.OK);
