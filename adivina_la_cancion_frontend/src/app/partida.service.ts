@@ -13,17 +13,19 @@ export class PartidaService {
   constructor(private http: HttpClient) { }
 
   obtenerPartidas(): Observable<Partida[]> {
+    console.log(`Obteniendo partidas...`)
+
     const url = this.partidasURL;
 
     return this.http.get<Partida[]>(url).pipe(
       tap(_ => {
         console.log(`Partidas obtenidas`)
       })
-    )
+    );
   }
 
   crearPartida(partidaDTO: PartidaDTO): Observable<number> {
-    console.log("Creando partida...")
+    console.log("Creando partida...");
 
     const url = `${this.partidasURL}`;
 
@@ -31,6 +33,30 @@ export class PartidaService {
       tap(_ => {
         console.log(`Partida creada`)
       })
-    )
+    );
   }
+
+  anhadirUsuario(partidaID: number, usuarioID: number) {
+    console.log(`Añadiendo usuario ${usuarioID} a partida ${partidaID}...`);
+
+    const url = `${this.partidasURL}/${partidaID}/${usuarioID}/anhadirUsuario`;
+
+    return this.http.put(url, {}).pipe(
+      tap(_ => {
+        console.log(`Usuario anhadido`)
+      })
+    );
+  }
+
+  iniciarPartida(partidaID: number, usuarioID: number) {
+    console.log(`Iniciando partida ${partidaID} por el usuario ${usuarioID}...`);
+  
+    const url = `${this.partidasURL}/${partidaID}/${usuarioID}/iniciarPartida`;
+  
+    return this.http.put(url, {}).pipe(
+      tap(() => {
+        console.log(`Partida ${partidaID} iniciada por el usuario ${usuarioID}.`);
+      })
+    );
+  }  
 }
