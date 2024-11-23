@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import adivina_la_cancion.prototipo.adivina_la_cancion.domain.Partida;
 import adivina_la_cancion.prototipo.adivina_la_cancion.dto.PartidaDTO;
 import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.PartidaRepository;
@@ -41,6 +43,7 @@ public class PartidaController {
     protected UsuarioRepository ur;
 
     @GetMapping
+    @JsonView({Views.PartidaPreview.class})
     public ResponseEntity<List<Partida>> obtenerPartidas() {
         return new ResponseEntity<List<Partida>>(partidaService.obtenerPartidas(), HttpStatus.OK);
     }

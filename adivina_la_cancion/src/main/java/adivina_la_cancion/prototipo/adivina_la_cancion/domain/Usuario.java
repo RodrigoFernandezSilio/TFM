@@ -1,5 +1,8 @@
 package adivina_la_cancion.prototipo.adivina_la_cancion.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import adivina_la_cancion.prototipo.adivina_la_cancion.service.api.Views;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,5 +23,6 @@ public class Usuario {
     private long id;
 
     @NonNull
+    @JsonView({Views.PartidaPreview.class})
     private String nombre;
 }

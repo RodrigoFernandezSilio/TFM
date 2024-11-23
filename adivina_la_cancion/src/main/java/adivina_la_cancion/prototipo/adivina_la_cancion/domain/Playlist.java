@@ -2,6 +2,9 @@ package adivina_la_cancion.prototipo.adivina_la_cancion.domain;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import adivina_la_cancion.prototipo.adivina_la_cancion.service.api.Views;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,9 +24,11 @@ public class Playlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView({Views.PartidaPreview.class})
     private long id;
 
     @NonNull
+    @JsonView({Views.PartidaPreview.class})
     private String nombre;
 
     @NonNull

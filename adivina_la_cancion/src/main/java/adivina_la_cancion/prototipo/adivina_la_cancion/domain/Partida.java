@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import adivina_la_cancion.prototipo.adivina_la_cancion.service.api.Views;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -30,19 +33,24 @@ public class Partida {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView({Views.PartidaPreview.class})
     private long id;
 
     @Enumerated(EnumType.STRING) // https://www.baeldung.com/jpa-persisting-enums-in-jpa#string
+    @JsonView({Views.PartidaPreview.class})
     private EstadoPartida estado = EstadoPartida.NO_INICIADA;
 
     @NonNull
+    @JsonView({Views.PartidaPreview.class})
     private Integer numMaxUsuarios;
 
     @NonNull
     @ManyToMany
+    @JsonView({Views.PartidaPreview.class})
     private List<Usuario> usuarios;
 
     @NonNull
+    @JsonView({Views.PartidaPreview.class})
     private Integer numMaxRondas;
 
     @NonNull
@@ -51,9 +59,11 @@ public class Partida {
 
     @NonNull
     @ManyToOne
+    @JsonView({Views.PartidaPreview.class})
     private Playlist playlist;
 
     @NonNull
+    @JsonView({Views.PartidaPreview.class})
     private Boolean privada;
 
     @NonNull
