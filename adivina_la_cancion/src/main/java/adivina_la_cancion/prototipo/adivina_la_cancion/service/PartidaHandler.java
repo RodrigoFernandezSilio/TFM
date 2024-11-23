@@ -1,9 +1,10 @@
 package adivina_la_cancion.prototipo.adivina_la_cancion.service;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -13,30 +14,73 @@ public class PartidaHandler extends TextWebSocketHandler {
 
     /**
      * CopyOnWriteArrayList:
-     * Tipo de lista diseñada para ser eficiente en entornos donde hay concurrencia, pero no en constante modificación
+     * Tipo de lista diseñada para ser eficiente en entornos donde hay concurrencia,
+     * pero no en constante modificación
      */
-    private final CopyOnWriteArrayList<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
+    // private final CopyOnWriteArrayList<WebSocketSession> sessions = new
+    // CopyOnWriteArrayList<>();
+    private final ConcurrentHashMap<Long, List<WebSocketSession>> sesiones = new ConcurrentHashMap<>();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        sessions.add(session);
+        // Obtener el partidaID desde la URL del WebSocket (en la URL es /webSocketPartida/{partidaID})
+        String uri = session.getUri().toString();
+        Long partidaID = extractPartidaIDFromUri(uri); // Esta función extrae el partidaID de la URI
+
+        // Obtener la lista de sesiones asociadas con el partidaID
+        List<WebSocketSession> sesionesPartida = sesiones.get(partidaID);
+
+        // Comprobar si no existe una lista de sesiones para el partidaID
+        if (sesionesPartida == null) {
+            // Crear la lista de sesiones para el partidaID
+            sesionesPartida = new ArrayList<>();
+            sesiones.put(partidaID, sesionesPartida);
+        }
+
+        // Agregar la sesion actual a la lista correspondiente
+        sesionesPartida.add(session);
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        sessions.remove(session);
-    }
+    public void afterConnectionClosed(WebSocketSession session, org.springframework.web.socket.CloseStatus status) throws Exception {
+        // Obtener el partidaID desde la URI de la conexión
+        Long partidaID = extractPartidaIDFromUri(session.getUri().toString());
 
-    /**
-     * Cuando desde el cliente (navegador) llegue un mensaje aquí, 
-     * se va a enviar a todas las sesiones que se encuentren activas (sessiones que estén en la lista)
-     */
-    @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        for (WebSocketSession webSocketSession : sessions) {
-            webSocketSession.sendMessage(message);
+        // Eliminar la sesion de la lista de sesiones de esa partida
+        List<WebSocketSession> sesionesPartida = sesiones.get(partidaID);
+        if (sesionesPartida != null) {
+            sesionesPartida.remove(session);
+            if (sesionesPartida.isEmpty()) {
+                sesiones.remove(partidaID); // Eliminar la entrada del mapa si no quedan mas sesiones
+            }
         }
     }
 
+    /**
+     * Cuando desde el cliente (navegador) llegue un mensaje aquí,
+     * se va a enviar a todas las sesiones que se encuentren activas (sessiones que
+     * estén en la lista)
+     */
+    @Override
+    public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        // Aquí podrías enviar este mensaje a todas las sesiones de una partida específica
+        Long partidaID = extractPartidaIDFromUri(session.getUri().toString());
+
+        List<WebSocketSession> sesionesPartida = sesiones.get(partidaID);
+
+        // Enviar el mensaje a todas las sesiones conectadas a esta partida
+        if (sesionesPartida != null) {
+            for (WebSocketSession partidaSession : sesionesPartida) {
+                partidaSession.sendMessage(message);
+            }
+        }
+    }
+
+    // Método auxiliar para extraer el partidaID desde la URI del WebSocket
+    private Long extractPartidaIDFromUri(String uri) {
+        // Suponiendo que la URI tiene la forma "/webSocketPartida/{partidaID}"
+        String partidaIDStr = uri.substring(uri.lastIndexOf("/") + 1);
+        return Long.parseLong(partidaIDStr);
+    }
 
 }

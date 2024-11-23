@@ -17,8 +17,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        // Indicar en que ubicacion se encuentra el WebSocket
-        registry.addHandler(partidaHandler, "/webSocketPartida");
+        registry.addHandler(partidaHandler, "/webSocketPartida/{partidaID}");
     }
-
 }
