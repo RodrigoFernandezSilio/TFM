@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import adivina_la_cancion.prototipo.adivina_la_cancion.domain.Usuario;
-import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.UsuarioRepository;
+import adivina_la_cancion.prototipo.adivina_la_cancion.service.UsuarioService;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -18,13 +17,11 @@ import adivina_la_cancion.prototipo.adivina_la_cancion.repositories.UsuarioRepos
 public class UsuarioController {
 
     @Autowired
-    protected UsuarioRepository ur;
+    protected UsuarioService usuarioService;
 
     @PostMapping("/{usuarioNombre}")
     @Transactional
-    public ResponseEntity<Usuario> crearUsuario(@PathVariable String usuarioNombre) {
-        Usuario usuario = new Usuario(usuarioNombre);
-        System.out.println("Usuario creado");
-        return ResponseEntity.ok(ur.save(usuario));
+    public ResponseEntity<Long> crearUsuario(@PathVariable String usuarioNombre) {
+        return usuarioService.crearUsuario(usuarioNombre);
     }
 }
