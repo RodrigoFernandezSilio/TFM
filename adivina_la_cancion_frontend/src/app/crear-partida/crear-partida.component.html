@@ -1,1 +1,31 @@
-<p>crear-partida works!</p>
+<h3>Crear Partida</h3>
+
+<form (ngSubmit)="crearPartida()">
+    <!-- Campos del formulario -->
+    <div class="form-group">
+        <label for="numMaxUsuarios">Número máximo de usuarios:</label>
+        <input type="number" id="numMaxUsuarios" [(ngModel)]="partidaDTO.numMaxUsuarios" name="numMaxUsuarios" required />
+    </div>
+
+    <div class="form-group">
+        <label for="numMaxRondas">Número máximo de rondas:</label>
+        <input type="number" id="numMaxRondas" [(ngModel)]="partidaDTO.numMaxRondas" name="numMaxRondas" required />
+    </div>
+
+    <div class="form-group">
+        <label for="playlistID">ID de la playlist:</label>
+        <input type="number" id="playlistID" [(ngModel)]="partidaDTO.playlistID" name="playlistID" required />
+    </div>
+
+    <div class="form-group">
+        <label for="privada">¿Partida privada?</label>
+        <input type="checkbox" id="privada" [(ngModel)]="partidaDTO.privada" name="privada" />
+    </div>
+
+    <div class="form-group">
+        <label for="codigoAcceso">Contraseña (opcional):</label>
+        <input type="text" id="codigoAcceso" [(ngModel)]="partidaDTO.codigoAcceso" name="codigoAcceso" />
+    </div>
+
+    <button type="submit">Crear Partida</button>
+</form>
