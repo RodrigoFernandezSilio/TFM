@@ -107,7 +107,7 @@ public class PartidaService {
         }
     }
 
-    public ResponseEntity<String> anhadirUsuario(Long partidaID, Long usuarioID) {
+    public ResponseEntity<Void> anhadirUsuario(Long partidaID, Long usuarioID) {
         Optional<Partida> partidaOptional = partidaRepo.findById(partidaID);
         Optional<Usuario> usuarioOptional = ur.findById(usuarioID);
 
@@ -139,7 +139,7 @@ public class PartidaService {
         iniciarPartida(partida);
     }
 
-    public ResponseEntity<String> iniciarPartidaPorAnfitrion(Long partidaID, Long usuarioID) {
+    public ResponseEntity<Void> iniciarPartidaPorAnfitrion(Long partidaID, Long usuarioID) {
         Optional<Partida> partidaOptional = partidaRepo.findById(partidaID);
         Optional<Usuario> usuarioOptional = ur.findById(usuarioID);
 
