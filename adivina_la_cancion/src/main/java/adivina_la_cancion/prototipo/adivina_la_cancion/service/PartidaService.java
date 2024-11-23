@@ -107,7 +107,7 @@ public class PartidaService {
         }
     }
 
-    public ResponseEntity<Partida> anhadirUsuario(Long partidaID, Long usuarioID) {
+    public ResponseEntity<String> anhadirUsuario(Long partidaID, Long usuarioID) {
         Optional<Partida> partidaOptional = partidaRepo.findById(partidaID);
         Optional<Usuario> usuarioOptional = ur.findById(usuarioID);
 
@@ -121,7 +121,7 @@ public class PartidaService {
                     // Si la partida se ha llenado, se inicia
                     iniciarPartidaAsync(partida);
                 }
-                return new ResponseEntity<>(partida, HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
