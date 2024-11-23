@@ -56,7 +56,7 @@ public class PartidaController {
 
     @PutMapping("/{partidaID}/{usuarioID}/anhadirUsuario")
     @Transactional
-    public ResponseEntity<Partida> anhadirUsuario(@PathVariable Long partidaID, @PathVariable Long usuarioID) {
+    public ResponseEntity<String> anhadirUsuario(@PathVariable Long partidaID, @PathVariable Long usuarioID) {
         return partidaService.anhadirUsuario(partidaID, usuarioID);
     }
 
