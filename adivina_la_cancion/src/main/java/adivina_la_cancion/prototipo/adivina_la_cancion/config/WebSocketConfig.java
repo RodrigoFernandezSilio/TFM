@@ -17,6 +17,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(partidaHandler, "/webSocketPartida/{partidaID}");
+        registry
+            .addHandler(partidaHandler, "/webSocketPartida/{partidaID}")
+            .setAllowedOrigins("http://localhost:4200"); // Solo permitir conexiones desde localhost:4200
     }
 }
