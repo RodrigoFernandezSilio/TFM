@@ -20,4 +20,8 @@ public class UsuarioService {
         return new ResponseEntity<Long>(usuario.getId(), HttpStatus.OK);
     }
 
+    public Usuario obteneUsuario(Long usuarioID) {
+        return usuarioRepo.findById(usuarioID).orElse(null);
+    }
+
 }

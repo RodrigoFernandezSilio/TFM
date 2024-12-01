@@ -88,6 +88,14 @@ public class PartidaService {
         return partidaRepo.findAll();
     }
 
+    public Partida obtenerPartida(Long partidaID) {
+        return partidaRepo.findById(partidaID).orElse(null);
+    }
+
+    public Partida obtenerPartidaConUsuarios(Long id) {
+        return partidaRepo.findByIdWithUsuarios(id); // Usando un query con JOIN FETCH
+    }
+
     public ResponseEntity<Long> crearPartida(PartidaDTO partidaDTO) {
         Optional<Playlist> playlistOptional = playlistRepo.findById(partidaDTO.getPlaylistID());
         Optional<Usuario> usuarioOptional = ur.findById(partidaDTO.getUsuarioID());
