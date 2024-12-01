@@ -23,11 +23,11 @@ public class PartidaHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        // Obtener el partidaID desde la URL del WebSocket (en la URL es /webSocketPartida/{partidaID})
-        String uri = session.getUri().toString();
-        Long partidaID = extractPartidaIDFromUri(uri); // Esta función extrae el partidaID de la URI
+
+        ConcurrentHashMap<String, Object> attributes = (ConcurrentHashMap<String, Object>) session.getAttributes();
 
         // Obtener la lista de sesiones asociadas con el partidaID
+        Long partidaID = (Long) attributes.get("partidaID");
         List<WebSocketSession> sesionesPartida = sesiones.get(partidaID);
 
         // Comprobar si no existe una lista de sesiones para el partidaID
@@ -75,12 +75,4 @@ public class PartidaHandler extends TextWebSocketHandler {
             }
         }
     }
-
-    // Método auxiliar para extraer el partidaID desde la URI del WebSocket
-    private Long extractPartidaIDFromUri(String uri) {
-        // Suponiendo que la URI tiene la forma "/webSocketPartida/{partidaID}"
-        String partidaIDStr = uri.substring(uri.lastIndexOf("/") + 1);
-        return Long.parseLong(partidaIDStr);
-    }
-
 }
