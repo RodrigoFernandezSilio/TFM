@@ -44,8 +44,10 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
                 Usuario usuario = usuarioService.obteneUsuario(usuarioID);
                 if (partida != null && usuario != null) {
                     if (partida.getUsuarios().contains(usuario)) {
+                        attributes.put("partidaID", partidaID);
                         attributes.put("partida", partida);
                         attributes.put("usuario", usuario);
+                        attributes.put("usuarioID", usuarioID);
                         return true;
                     }
                     return false;
