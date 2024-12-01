@@ -43,8 +43,11 @@ public class PartidaHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, org.springframework.web.socket.CloseStatus status) throws Exception {
-        // Obtener el partidaID desde la URI de la conexión
-        Long partidaID = extractPartidaIDFromUri(session.getUri().toString());
+        
+        ConcurrentHashMap<String, Object> attributes = (ConcurrentHashMap<String, Object>) session.getAttributes();
+
+        // Obtener la lista de sesiones asociadas con el partidaID
+        Long partidaID = (Long) attributes.get("partidaID");
 
         // Eliminar la sesion de la lista de sesiones de esa partida
         List<WebSocketSession> sesionesPartida = sesiones.get(partidaID);
@@ -63,8 +66,11 @@ public class PartidaHandler extends TextWebSocketHandler {
      */
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        // Aquí podrías enviar este mensaje a todas las sesiones de una partida específica
-        Long partidaID = extractPartidaIDFromUri(session.getUri().toString());
+       
+        ConcurrentHashMap<String, Object> attributes = (ConcurrentHashMap<String, Object>) session.getAttributes();
+
+        // Obtener la lista de sesiones asociadas con el partidaID
+        Long partidaID = (Long) attributes.get("partidaID");
 
         List<WebSocketSession> sesionesPartida = sesiones.get(partidaID);
 
