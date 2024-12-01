@@ -22,7 +22,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
-            .addHandler(partidaHandler, "/webSocketPartida/*/*")
+            .addHandler(partidaHandler, "/webSocketPartida/{partidaID}/{usuarioID}")
             .addInterceptors(customHandshakeInterceptor) // Interceptor para extraer y validar parámetros
             .setAllowedOrigins("http://localhost:4200"); // Solo permitir conexiones desde localhost:4200
     }
