@@ -35,7 +35,7 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
 
         if (path != null) {
             String[] elementosPath = path.split("/");
-            
+
             if (elementosPath.length == 4) {
                 long partidaID = Long.parseLong(elementosPath[2]);
                 long usuarioID = Long.parseLong(elementosPath[3]);
@@ -44,6 +44,8 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
                 Usuario usuario = usuarioService.obteneUsuario(usuarioID);
                 if (partida != null && usuario != null) {
                     if (partida.getUsuarios().contains(usuario)) {
+                        attributes.put("partida", partida);
+                        attributes.put("usuario", usuario);
                         return true;
                     }
                     return false;
@@ -53,8 +55,6 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor {
         }
         return false;
     }
-
-    
 
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
