@@ -36,7 +36,7 @@ export class PartidaService {
     );
   }
 
-  anhadirUsuario(partidaID: number, usuarioID: number) {
+  anhadirUsuario(partidaID: number, usuarioID: number): Observable<any> {
     console.log(`Añadiendo usuario ${usuarioID} a partida ${partidaID}...`);
 
     const url = `${this.partidasURL}/${partidaID}/${usuarioID}/anhadirUsuario`;

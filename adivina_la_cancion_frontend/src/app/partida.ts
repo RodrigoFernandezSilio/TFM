@@ -6,7 +6,7 @@ export interface Partida {
     usuarios: Usuario[];
     numMaxRondas: number;
     rondas: Ronda[];
-    playlistID: Playlist;
+    playlist: Playlist;
     privada: boolean;
     codigoAcceso: string;
 }

@@ -1,1 +1,3 @@
-<p>buscar-partida works!</p>
+<li *ngFor="let partida of partidas" (click)="anhadirUsuario(partida.id)" class="partida-item">
+    {{ partida.playlist }} (ID: {{ partida.id }})
+</li>
