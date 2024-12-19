@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Partida, PartidaDTO } from '../partida';
-import { PartidaService } from '../partida.service';
 import { FormsModule } from '@angular/forms';
-import { UsuarioService } from '../usuario.service';
 import { Router } from '@angular/router';
+import { PartidaDTO } from '../partida';
+import { PartidaService } from '../partida.service';
+import { UsuarioService } from '../usuario.service';
 
 @Component({
   selector: 'app-crear-partida',
