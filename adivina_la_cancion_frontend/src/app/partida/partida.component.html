@@ -1,1 +1,22 @@
-<p>partida works!</p>
+<div class="partida-container">
+    <h2>Partida {{ partidaID }}</h2>
+  
+    <!-- Área para mostrar los mensajes recibidos en tiempo real -->
+    <div class="messages-container">
+      <label for="messages">Mensajes de la partida:</label>
+      <div id="messages" style="border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: scroll;">
+        <!-- Iteramos sobre los mensajes recibidos y los mostramos en un div -->
+        <div *ngFor="let mensaje of mensajes">
+          <p>{{ mensaje.text }}</p>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Área para escribir y enviar un mensaje -->
+    <div class="send-message-container">
+      <label for="sendMessage">Enviar un mensaje:</label>
+      <textarea id="sendMessage" [(ngModel)]="mensajeEnviado" rows="4" cols="50"></textarea>
+      <button (click)="enviarMensaje()">Enviar</button>
+    </div>
+  </div>
+  
