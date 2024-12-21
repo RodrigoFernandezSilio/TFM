@@ -140,6 +140,7 @@ public class PartidaService {
 
     protected void iniciarPartida(Partida partida) {
         partida.iniciarPartida();
+        future = taskScheduler.scheduleAtFixedRate(() -> analizarRespuestasYemitirResultados(partida), INTERVALO);
     }
 
     @Async
@@ -165,6 +166,16 @@ public class PartidaService {
             }
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public void analizarRespuestasYemitirResultados(Partida partida) {
+        if (partida.getRondaActual() < partida.getNumMaxRondas()) {
+            System.out.println("analizarRespuestasYemitirResultados de la ronda " + partida.getRondaActual());
+            partida.setRondaActual(partida.getRondaActual() + 1);
+        } else {
+            System.out.println("Fin de analizarRespuestasYemitirResultados");
+            future.cancel(false);
         }
     }
 }

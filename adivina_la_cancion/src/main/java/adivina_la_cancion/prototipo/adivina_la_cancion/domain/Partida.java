@@ -53,6 +53,8 @@ public class Partida {
     @JsonView({Views.PartidaPreview.class})
     private Integer numMaxRondas;
 
+    private Integer rondaActual = 0;
+
     @NonNull
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Ronda> rondas;
